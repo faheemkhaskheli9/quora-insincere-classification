@@ -1,0 +1,5 @@
+[project]
+name = "quora-insincere-classification"
+version = "0.1.0"
+description = "Insincere Question Classification"
+requires-python = ">=3.10"
