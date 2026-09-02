@@ -4,7 +4,7 @@
 > This is an original, from-scratch build. It is not affiliated with, and does not
 > contain any code, prompts, data, or business logic from, any employer or client.
 
-![status](https://img.shields.io/badge/status-planned-lightgrey)
+![status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -81,11 +81,21 @@ No proprietary, employer-owned, or client-identifiable data is used in this proj
 
 ## 9. Training / Execution
 
-Document the commands used to run training, ingestion, or the main pipeline, e.g.:
+Phase 1 — shared text preprocessing pipeline (implemented):
 
 ```bash
-python -m src.main --config configs/default.yaml
+export PYTHONPATH=src            # or: pip install -e .
+
+# Inspect the cleaner on built-in noisy examples (no dataset needed):
+python -m quora_insincere --demo
+
+# Clean a CSV of questions into raw/clean columns:
+python -m quora_insincere --input data/train.csv --text-col question_text     --output data/train_clean.csv
 ```
+
+The same `TextPreprocessor` is reused by every downstream model. URL removal
+and (opt-in) HTML-tag stripping are anchored so question content like
+`a < b` or `eGFR <60` is never mangled.
 
 ## 10. Evaluation
 
@@ -135,4 +145,4 @@ business logic. All code, data, and documentation here are original or built on
 publicly available datasets and open-source tools.
 
 ---
-_Last updated: 2026-08-18_
+_Last updated: 2026-09-02_

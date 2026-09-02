@@ -1,1 +1,5 @@
-# Fill in with the exact package versions used once implementation starts.
+# Runtime dependencies, pinned as implementation progresses.
+#
+# Phase 1 (text preprocessing pipeline) uses the standard library only.
+# scikit-learn / torch / transformers land with the Phase 1 baseline model
+# and the Phase 2/3 deep-learning work respectively.

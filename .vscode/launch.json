@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Quora Insincere: preprocess demo",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "quora_insincere",
+      "args": ["--demo"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src", "PYTHONIOENCODING": "utf-8" }
+    },
+    {
+      "name": "Quora Insincere: preprocess CSV",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "quora_insincere",
+      "args": [
+        "--input", "data/train.csv",
+        "--text-col", "question_text",
+        "--output", "data/train_clean.csv"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src", "PYTHONIOENCODING": "utf-8" }
+    },
+    {
+      "name": "Quora Insincere: pytest",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests/", "-v"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
