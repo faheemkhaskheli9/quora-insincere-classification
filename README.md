@@ -4,9 +4,11 @@
 > This is an original, from-scratch build. It is not affiliated with, and does not
 > contain any code, prompts, data, or business logic from, any employer or client.
 
-![status](https://img.shields.io/badge/status-in%20progress-yellow)
+![status](https://img.shields.io/badge/status-archived-lightgrey)
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
+
+> **Archived:** This repo's functionality has been consolidated into [nlp-classification-suite](../nlp-classification-suite/), which combines it with 1 related NLP classification repo (`multilingual-sentiment-analysis`) into a single app with a shared dashboard UI. This repo is kept for history but is no longer developed independently.
 
 ## 1. Problem
 
