@@ -9,13 +9,12 @@ build/
 dist/
 
 # Data & models
-*.csv
+data/*.csv
+!examples/*.csv
 *.parquet
 data/raw/
 data/processed/
-models/*.pt
-models/*.onnx
-models/*.engine
+models/
 *.ckpt
 
 # Notebooks

@@ -16,6 +16,7 @@ import csv
 import sys
 from collections.abc import Sequence
 
+from .baseline import load_dataset, train_baseline
 from .preprocessing import TextPreprocessor
 
 _DEMO_ROWS = [
@@ -59,7 +60,42 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Run on a few built-in noisy examples (no input file needed).",
     )
+    parser.add_argument(
+        "--train-baseline",
+        action="store_true",
+        help="Train the TF-IDF + Logistic Regression baseline instead of cleaning text. "
+        "Use --data/--target-col/--model-out alongside it.",
+    )
+    parser.add_argument(
+        "--data",
+        default="examples/sample_questions.csv",
+        help="CSV with --text-col and --target-col for --train-baseline "
+        "(default: the bundled public-domain sample).",
+    )
+    parser.add_argument(
+        "--target-col",
+        default="target",
+        help="Label column for --train-baseline (default: target).",
+    )
+    parser.add_argument(
+        "--model-out",
+        default="models/baseline_tfidf_logreg.joblib",
+        help="Where to save the trained baseline model artifact.",
+    )
     return parser
+
+
+def _run_train_baseline(args: argparse.Namespace) -> int:
+    texts, labels = load_dataset(args.data, text_col=args.text_col, target_col=args.target_col)
+    model, metrics = train_baseline(texts, labels)
+    saved_path = model.save(args.model_out)
+
+    print(f"trained on {len(texts)} rows -> saved model to {saved_path}")
+    print(
+        f"held-out precision={metrics.precision:.3f} "
+        f"recall={metrics.recall:.3f} f1={metrics.f1:.3f} (n={metrics.support})"
+    )
+    return 0
 
 
 def _iter_texts(args: argparse.Namespace) -> list[str]:
@@ -79,6 +115,9 @@ def _iter_texts(args: argparse.Namespace) -> list[str]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+
+    if args.train_baseline:
+        return _run_train_baseline(args)
 
     preprocessor = TextPreprocessor(
         lowercase=not args.keep_case,

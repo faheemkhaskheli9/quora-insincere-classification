@@ -76,7 +76,13 @@ cp .env.example .env              # fill in API keys / config
 
 ## 8. Dataset
 
-Document which public dataset(s) or synthetic data generators are used here.
+The reference dataset is Kaggle's public **Quora Insincere Questions
+Classification** competition dataset (`question_text`, `target`). It needs a
+Kaggle account/API token and is far too large (~1.3M rows) to ship or fetch
+in CI, so `examples/sample_questions.csv` bundles a small, self-authored,
+public-domain substitute with the same two-column schema (30 sincere / 30
+insincere-style questions) used by default for training and tests. Point
+`--data` at the real Kaggle CSV (once downloaded locally) to train on it.
 No proprietary, employer-owned, or client-identifiable data is used in this project.
 
 ## 9. Training / Execution
@@ -96,6 +102,18 @@ python -m quora_insincere --input data/train.csv --text-col question_text     --
 The same `TextPreprocessor` is reused by every downstream model. URL removal
 and (opt-in) HTML-tag stripping are anchored so question content like
 `a < b` or `eGFR <60` is never mangled.
+
+Phase 1 — TF-IDF + Logistic Regression baseline:
+
+```bash
+python -m quora_insincere --train-baseline \
+    --data examples/sample_questions.csv --target-col target \
+    --model-out models/baseline_tfidf_logreg.joblib
+```
+
+Trains on a stratified 75/25 split and prints held-out precision/recall/F1;
+the fitted vectorizer + classifier are saved together as one reloadable
+artifact via `TfidfLogisticRegressionModel.save`/`.load`.
 
 ## 10. Evaluation
 
