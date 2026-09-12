@@ -95,6 +95,11 @@ def _run_train_baseline(args: argparse.Namespace) -> int:
         f"held-out precision={metrics.precision:.3f} "
         f"recall={metrics.recall:.3f} f1={metrics.f1:.3f} (n={metrics.support})"
     )
+    c = metrics.confusion
+    print(
+        f"  confusion matrix: TP={c.true_positives} FP={c.false_positives} "
+        f"FN={c.false_negatives} TN={c.true_negatives}"
+    )
     return 0
 
 

@@ -23,9 +23,9 @@ from pathlib import Path
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import precision_recall_fscore_support
 from sklearn.model_selection import train_test_split
 
+from .evaluation import EvalMetrics, evaluate_predictions
 from .preprocessing import TextPreprocessor
 
 __all__ = [
@@ -64,24 +64,6 @@ def load_dataset(
     if not texts:
         raise ValueError(f"{path} has no data rows")
     return texts, labels
-
-
-@dataclass(frozen=True)
-class EvalMetrics:
-    """Precision/recall/F1 for the positive (insincere) class."""
-
-    precision: float
-    recall: float
-    f1: float
-    support: int
-
-    def as_dict(self) -> dict[str, float]:
-        return {
-            "precision": self.precision,
-            "recall": self.recall,
-            "f1": self.f1,
-            "support": self.support,
-        }
 
 
 @dataclass
@@ -171,13 +153,8 @@ def train_baseline(
     classifier = LogisticRegression(max_iter=1000, class_weight="balanced")
     classifier.fit(x_train_vec, y_train)
 
-    predictions = classifier.predict(x_test_vec)
-    precision, recall, f1, _ = precision_recall_fscore_support(
-        y_test, predictions, average="binary", pos_label=1, zero_division=0
-    )
-    metrics = EvalMetrics(
-        precision=float(precision), recall=float(recall), f1=float(f1), support=len(y_test)
-    )
+    predictions = list(classifier.predict(x_test_vec))
+    metrics = evaluate_predictions(list(y_test), predictions)
 
     model = TfidfLogisticRegressionModel(
         vectorizer=vectorizer, classifier=classifier, preprocessor=preprocessor
